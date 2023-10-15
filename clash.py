@@ -7,14 +7,11 @@ def analyze_packet(packet):
     print(packet)
 
 def main():
-    # Replace 'your_capture_file.pcap' with the path to your Wireshark capture file
     capture_file = 'your_capture_file.pcap'
     
     try:
-        # Read packets from the capture file
         packets = pyshark.FileCapture(capture_file, display_filter='your_display_filter')
-        
-        # Analyze each packet in the capture file
+       
         for packet in packets:
             analyze_packet(packet)
     
