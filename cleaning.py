@@ -11,8 +11,13 @@ def analyze_packet(packet):
 
 def main():
     capture_file = 'clash_data.pcapng'
-    packets = pyshark.FileCapture(capture_file, display_filter="tcp")
+    packets = pyshark.FileCapture(capture_file, display_filter="tls")
     analyze_packet(packets[0])
+
+if __name__ == "__main__":
+    main()
+
+
     # try:
     #     packets = pyshark.FileCapture(capture_file, display_filter='your_display_filter')
        
@@ -23,6 +28,3 @@ def main():
     #     print(f"Error: File '{capture_file}' not found.")
     # except Exception as e:
     #     print(f"An error occurred: {e}")
-
-if __name__ == "__main__":
-    main()
