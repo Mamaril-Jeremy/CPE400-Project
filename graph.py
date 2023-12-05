@@ -1,26 +1,27 @@
-from scapy.all import rdpcap
+import scapy.all as scapy
 import matplotlib.pyplot as plt
+from datetime import datetime
 
-def plot_packet_count_over_time(pcap_file):
-    packets = rdpcap(pcap_file)
+def analyze_packets(file_path):
+    packets = scapy.rdpcap(file_path)
 
-    # Extract timestamps
-    timestamps = [packet.sniff_timestamp for packet in packets]
+    # Extract timestamps from packets and convert to floating-point numbers
+    timestamps = [float(packet.time) for packet in packets]
 
-    # Count the number of packets for each unique timestamp
-    packet_counts = {}
-    for timestamp in timestamps:
-        packet_counts[timestamp] = packet_counts.get(timestamp, 0) + 1
+    # Convert timestamps to datetime objects for better visualization
+    datetime_objects = [datetime.utcfromtimestamp(ts) for ts in timestamps]
 
-    # Plot the data
-    plt.plot(packet_counts.keys(), packet_counts.values(), marker='o')
+    # Plot the graph
+    plt.figure(figsize=(10, 5))
+    plt.plot(datetime_objects, range(len(packets)), marker='o', linestyle='-', color='b')
+    plt.title('Packet Analysis Over Time')
     plt.xlabel('Time')
-    plt.ylabel('Number of Packets')
-    plt.title('Packet Count Over Time')
+    plt.ylabel('Packet Count')
     plt.xticks(rotation=45)
     plt.tight_layout()
+
+    # Show the plot
     plt.show()
 
-if __name__ == "__main__":
-    input_capture_file = 'your_file.pcapng'
-    plot_packet_count_over_time(input_capture_file)
+# Replace 'your_file_path.pcapng' with the actual path to your pcapng file
+analyze_packets('cleaned_capture.pcapng')
