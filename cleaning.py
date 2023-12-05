@@ -1,29 +1,23 @@
-import pyshark
+from scapy.all import rdpcap, wrpcap
 
-def analyze_and_save_packet(packet, output_cap):
-    if 'TCP' in packet and ('RST' in packet['TCP'].flags or 'DUP ACK' in packet['TCP'].flags):
-        return
-    output_cap.write(packet)
+def clean_and_save_capture(input_file, output_file):
+    # Step 1: Read the Wireshark capture
+    packets = rdpcap(input_file)
 
-def main():
-    input_capture_file = 'clash_data.pcapng'
-    output_capture_file = 'filtered_data.pcapng'
+    # Step 2: Filter packets (e.g., only TCP packets)
+    tcp_packets = [pkt for pkt in packets if pkt.haslayer('TCP')]
 
-    try:
-        # Open the input capture file
-        input_packets = pyshark.FileCapture(input_capture_file, display_filter="tcp")
-        
-        # Open a new capture file for writing filtered packets
-        output_packets = pyshark.FileCapture(output_capture_file, mode=pyshark.OutputWriter, output_file=output_capture_file, override=True)
+    # Step 3: Create a new Scapy PacketList
+    new_capture = tcp_packets
 
-        # Analyze and save each packet
-        for packet in input_packets:
-            analyze_and_save_packet(packet, output_packets)
-    
-    except FileNotFoundError:
-        print(f"Error: File '{input_capture_file}' not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    # Step 4: Save the new capture to another file
+    wrpcap(output_file, new_capture)
 
-if __name__ == "__main__":
-    main()
+# Replace 'your_capture_file.pcap' with the actual input file name
+input_file = 'clash_data.pcapng'
+
+# Replace 'cleaned_capture.pcap' with the desired output file name
+output_file = 'cleaned_capture.pcapng'
+
+# Call the function to clean and save the capture
+clean_and_save_capture(input_file, output_file)
