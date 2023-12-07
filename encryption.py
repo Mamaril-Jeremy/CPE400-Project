@@ -18,5 +18,5 @@ def analyze_pcap(pcap_file):
         print(f"{standard}: {count} packets")
 
 if __name__ == "__main__":
-    pcap_file = "your_pcapng_file.pcapng"  # Replace with the path to your pcapng file
+    pcap_file = "tcp_capture.pcapng"  # Replace with the path to your pcapng file
     analyze_pcap(pcap_file)
