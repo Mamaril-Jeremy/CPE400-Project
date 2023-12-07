@@ -1,6 +1,17 @@
 import pyshark
 from collections import Counter
 
+def get_tls_content_type_label(content_type):
+    # Mapping of TLS content type numeric values to labels
+    content_type_labels = {
+        '20': 'ChangeCipherSpec',
+        '21': 'Alert',
+        '22': 'Handshake',
+        '23': 'ApplicationData',
+        '24': 'Heartbeat',
+    }
+    return content_type_labels.get(content_type, 'Unknown')
+
 def analyze_pcap(pcap_file):
     capture = pyshark.FileCapture(pcap_file)
     encryption_standards = Counter()
@@ -10,7 +21,7 @@ def analyze_pcap(pcap_file):
         if 'TLS' in packet:
             # Extract encryption information from the TLS layer
             encryption_standard = packet.tls.get('tls.record.content_type', 'Unknown')
-            encryption_standards[encryption_standard] += 1
+            encryption_standards[get_tls_content_type_label(encryption_standard)] += 1
 
     # Print the summary of encryption standards
     print("Summary of Encryption Standards:")
