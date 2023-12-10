@@ -24,4 +24,4 @@ def analyze_packets(file_path):
     plt.show()
 
 # Replace 'your_file_path.pcapng' with the actual path to your pcapng file
-analyze_packets('cleaned_capture.pcapng')
+analyze_packets('tcp_capture.pcapng')

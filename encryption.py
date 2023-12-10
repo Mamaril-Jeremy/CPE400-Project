@@ -18,6 +18,8 @@ def analyze_pcap(pcap_file):
 
     for packet in capture:
         # Check if the packet has a Transport Layer Security (TLS) layer
+        if 'TCP' in packet and ('RST' in packet['TCP'].flags or 'DUP ACK' in packet['TCP'].flags):
+                continue
         if 'TLS' in packet:
             # Extract encryption information from the TLS layer
             encryption_standard = packet.tls.get('tls.record.content_type', 'Unknown')
@@ -29,5 +31,5 @@ def analyze_pcap(pcap_file):
         print(f"{standard}: {count} packets")
 
 if __name__ == "__main__":
-    pcap_file = "tcp_capture.pcapng"  # Replace with the path to your pcapng file
+    pcap_file = "clash_data.pcapng"  # Replace with the path to your pcapng file
     analyze_pcap(pcap_file)

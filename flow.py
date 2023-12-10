@@ -9,6 +9,9 @@ def analyze_flow(pcap_file):
 
     for packet in capture:
         if 'IP' in packet and 'TCP' in packet:
+            if 'TCP' in packet and ('RST' in packet['TCP'].flags or 'DUP ACK' in packet['TCP'].flags):
+                continue
+            
             src_ip = packet.ip.src
             dst_ip = packet.ip.dst
             src_port = packet.tcp.srcport
@@ -32,5 +35,5 @@ def analyze_flow(pcap_file):
     plt.show()
 
 if __name__ == "__main__":
-    pcap_file = "clash_data.pcapng"  # Replace with the path to your pcapng file
+    pcap_file = "clash_data.pcapng" 
     analyze_flow(pcap_file)
