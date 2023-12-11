@@ -1,5 +1,6 @@
 import pyshark
 from collections import Counter
+from tabulate import tabulate
 
 def get_tls_content_type_label(content_type):
     # Mapping of TLS content type numeric values to labels
@@ -17,18 +18,20 @@ def analyze_pcap(pcap_file):
     encryption_standards = Counter()
 
     for packet in capture:
-        # Check if the packet has a Transport Layer Security (TLS) layer
+        #Check if the packet has a Transport Layer Security (TLS) layer
         if 'TCP' in packet and ('RST' in packet['TCP'].flags or 'DUP ACK' in packet['TCP'].flags):
-                continue
+            continue
         if 'TLS' in packet:
             # Extract encryption information from the TLS layer
             encryption_standard = packet.tls.get('tls.record.content_type', 'Unknown')
             encryption_standards[get_tls_content_type_label(encryption_standard)] += 1
 
-    # Print the summary of encryption standards
-    print("Summary of Encryption Standards:")
-    for standard, count in encryption_standards.items():
-        print(f"{standard}: {count} packets")
+    # Prepare the results for tabulate
+    headers = ["Encryption Standard", "Packets"]
+    data = [(standard, count) for standard, count in encryption_standards.items()]
+
+    # Print the tabulated summary of encryption standards
+    print(tabulate(data, headers=headers, tablefmt="grid"))
 
 if __name__ == "__main__":
     pcap_file = "clash_data.pcapng"  # Replace with the path to your pcapng file
