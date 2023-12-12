@@ -1,4 +1,4 @@
-# TCP Connection Script File
+# TCP Connection Script
 
 from scapy.all import rdpcap, TCP, IP, IPv6
 from tabulate import tabulate
@@ -39,7 +39,6 @@ def analyze_tcp_connections(pcap_file):
                            ', '.join(map(str, values['seq_nums'])),
                            ', '.join(map(str, values['ack_nums']))])
 
-    headers = ['Connection', 'Sequence Numbers', 'Acknowledgment Numbers']
     for item in table_data:
         print(f"Connection: {item[0]}")
         print(f"Sequence Numbers: {item[1]}")
